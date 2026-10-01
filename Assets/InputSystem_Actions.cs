@@ -115,6 +115,34 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""DiceControl"",
+            ""id"": ""04207be7-b7c6-4c9b-b407-ef17e8b3a73c"",
+            ""actions"": [
+                {
+                    ""name"": ""Throw Dice"",
+                    ""type"": ""Button"",
+                    ""id"": ""cfb70854-a3f1-42b1-a2e2-48e1f0d803be"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""1d116142-7a4d-44d0-92ed-f192aee94452"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Throw Dice"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -183,11 +211,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         // MainMenu
         m_MainMenu = asset.FindActionMap("MainMenu", throwIfNotFound: true);
         m_MainMenu_ParallaxMove = m_MainMenu.FindAction("Parallax Move", throwIfNotFound: true);
+        // DiceControl
+        m_DiceControl = asset.FindActionMap("DiceControl", throwIfNotFound: true);
+        m_DiceControl_ThrowDice = m_DiceControl.FindAction("Throw Dice", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
     {
         UnityEngine.Debug.Assert(!m_MainMenu.enabled, "This will cause a leak and performance issues, InputSystem_Actions.MainMenu.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_DiceControl.enabled, "This will cause a leak and performance issues, InputSystem_Actions.DiceControl.Disable() has not been called.");
     }
 
     /// <summary>
@@ -355,6 +387,102 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="MainMenuActions" /> instance referencing this action map.
     /// </summary>
     public MainMenuActions @MainMenu => new MainMenuActions(this);
+
+    // DiceControl
+    private readonly InputActionMap m_DiceControl;
+    private List<IDiceControlActions> m_DiceControlActionsCallbackInterfaces = new List<IDiceControlActions>();
+    private readonly InputAction m_DiceControl_ThrowDice;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "DiceControl".
+    /// </summary>
+    public struct DiceControlActions
+    {
+        private @InputSystem_Actions m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public DiceControlActions(@InputSystem_Actions wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "DiceControl/ThrowDice".
+        /// </summary>
+        public InputAction @ThrowDice => m_Wrapper.m_DiceControl_ThrowDice;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_DiceControl; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="DiceControlActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(DiceControlActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="DiceControlActions" />
+        public void AddCallbacks(IDiceControlActions instance)
+        {
+            if (instance == null || m_Wrapper.m_DiceControlActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_DiceControlActionsCallbackInterfaces.Add(instance);
+            @ThrowDice.started += instance.OnThrowDice;
+            @ThrowDice.performed += instance.OnThrowDice;
+            @ThrowDice.canceled += instance.OnThrowDice;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="DiceControlActions" />
+        private void UnregisterCallbacks(IDiceControlActions instance)
+        {
+            @ThrowDice.started -= instance.OnThrowDice;
+            @ThrowDice.performed -= instance.OnThrowDice;
+            @ThrowDice.canceled -= instance.OnThrowDice;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="DiceControlActions.UnregisterCallbacks(IDiceControlActions)" />.
+        /// </summary>
+        /// <seealso cref="DiceControlActions.UnregisterCallbacks(IDiceControlActions)" />
+        public void RemoveCallbacks(IDiceControlActions instance)
+        {
+            if (m_Wrapper.m_DiceControlActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="DiceControlActions.AddCallbacks(IDiceControlActions)" />
+        /// <seealso cref="DiceControlActions.RemoveCallbacks(IDiceControlActions)" />
+        /// <seealso cref="DiceControlActions.UnregisterCallbacks(IDiceControlActions)" />
+        public void SetCallbacks(IDiceControlActions instance)
+        {
+            foreach (var item in m_Wrapper.m_DiceControlActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_DiceControlActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="DiceControlActions" /> instance referencing this action map.
+    /// </summary>
+    public DiceControlActions @DiceControl => new DiceControlActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -434,5 +562,20 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnParallaxMove(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "DiceControl" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="DiceControlActions.AddCallbacks(IDiceControlActions)" />
+    /// <seealso cref="DiceControlActions.RemoveCallbacks(IDiceControlActions)" />
+    public interface IDiceControlActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Throw Dice" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnThrowDice(InputAction.CallbackContext context);
     }
 }

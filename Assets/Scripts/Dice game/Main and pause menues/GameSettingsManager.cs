@@ -1,28 +1,37 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using TMPro.EditorUtilities;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class GameSettingsManager : MonoBehaviour
 {
 
-    public Slider SoundVolume;
-
+    [SerializeField] private Slider SoundVolume;
     [SerializeField] private string soundsKey;
 
-    public Dropdown ScreenResolution;
-    public Dropdown GraphicsQuality;
+	[SerializeField] private TMP_Dropdown ScreenResolution;
+	[SerializeField] private TMP_Dropdown GraphicsQuality;
 
     [SerializeField] private string resolutionKey;
 	[SerializeField] private string graphicsKey;
 
-	public bool IsFullscreen = true;
-	public Toggle FullscreenModeActivator;
+	[SerializeField] private bool IsFullscreen = true;
+	[SerializeField] private Toggle FullscreenModeActivator;
 	[SerializeField] private string fullscreenKey;
 
-	void Start()
+	[SerializeField] private string cubeThrowingBinding;
+	[SerializeField] private string cubeThrowingKey;
+
+	private InputSystem_Actions inputActions;
+
+	private void Awake()
     {
+		inputActions = new InputSystem_Actions();
+
         if (!PlayerPrefs.HasKey(soundsKey))
         {
 			PlayerPrefs.SetFloat(soundsKey, 0.5f);
@@ -67,8 +76,20 @@ public class GameSettingsManager : MonoBehaviour
 		}
 	}
 
+	private void Update()
+	{
+		//Debug.Log("Sounds:" + PlayerPrefs.GetFloat(soundsKey));
+		//Debug.Log("Resolution:" + PlayerPrefs.GetInt(resolutionKey));
+		//Debug.Log("Graphics:" + PlayerPrefs.GetInt(graphicsKey));
+		//Debug.Log("Fullscreen:" + PlayerPrefs.GetString(fullscreenKey));
+		//Debug.Log(QualitySettings.GetQualityLevel());
+	}
 
-    public void _saveSoundsSet()
+	private void OnEnable() => inputActions.Enable();
+
+	private void OnDisable() => inputActions.Disable();
+
+	public void SaveSoundsSet()
     {
         PlayerPrefs.SetFloat(soundsKey, SoundVolume.value);
     }
@@ -101,7 +122,7 @@ public class GameSettingsManager : MonoBehaviour
 		Debug.Log("Saved");
 	}
 
-	public void SaveGraphicsQuakitySet()
+	public void SaveGraphicsQualitySet()
 	{
 		switch (GraphicsQuality.value)
 		{
@@ -124,11 +145,11 @@ public class GameSettingsManager : MonoBehaviour
 	public void FullscreenSet()
 	{
 		PlayerPrefs.SetString(fullscreenKey, Convert.ToString(FullscreenModeActivator.isOn));
-		IsFullscreen = bool.Parse(PlayerPrefs.GetString(fullscreenKey));
+		IsFullscreen = FullscreenModeActivator.isOn;
 		SaveScreenResolutionSet();
 	}
 
-	public void _ResetAllSettings()
+	public void ResetAllSettings()
     {
         //PlayerPrefs.DeleteAll();
         PlayerPrefs.SetFloat(soundsKey, 0.5f);
@@ -144,12 +165,8 @@ public class GameSettingsManager : MonoBehaviour
 		Screen.SetResolution(1366, 768, IsFullscreen);
     }
 
-	private void Update()
+	public void RebindCubeThrowing()
 	{
-		Debug.Log("Sounds:" + PlayerPrefs.GetFloat(soundsKey));
-		Debug.Log("Resolution:" + PlayerPrefs.GetInt(resolutionKey));
-		Debug.Log("Graphics:" + PlayerPrefs.GetInt(graphicsKey));
-		Debug.Log("Fullscreen:" + PlayerPrefs.GetString(fullscreenKey));
-		Debug.Log(QualitySettings.GetQualityLevel());
+		inputActions.DiceControl.ThrowDice.ChangeBinding(0);
 	}
 }

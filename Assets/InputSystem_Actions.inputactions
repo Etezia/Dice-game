@@ -29,6 +29,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "DiceControl",
+            "id": "04207be7-b7c6-4c9b-b407-ef17e8b3a73c",
+            "actions": [
+                {
+                    "name": "Throw Dice",
+                    "type": "Button",
+                    "id": "cfb70854-a3f1-42b1-a2e2-48e1f0d803be",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "1d116142-7a4d-44d0-92ed-f192aee94452",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Throw Dice",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
