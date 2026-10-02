@@ -31,13 +31,22 @@
             ]
         },
         {
-            "name": "DiceControl",
+            "name": "InGameActions",
             "id": "04207be7-b7c6-4c9b-b407-ef17e8b3a73c",
             "actions": [
                 {
                     "name": "Throw Dice",
                     "type": "Button",
                     "id": "cfb70854-a3f1-42b1-a2e2-48e1f0d803be",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Switch Pause",
+                    "type": "Button",
+                    "id": "94d3f0cf-df41-4aff-ac98-8a3075fe3b04",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -53,6 +62,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Throw Dice",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8d62a666-d318-48d2-a30c-9dfc8a8b19a0",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Switch Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

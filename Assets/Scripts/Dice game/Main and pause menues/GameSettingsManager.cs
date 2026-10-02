@@ -85,9 +85,9 @@ public class GameSettingsManager : MonoBehaviour
 		//Debug.Log(QualitySettings.GetQualityLevel());
 	}
 
-	private void OnEnable() => inputActions.Enable();
+	private void OnEnable() => inputActions.InGameActions.Enable();
 
-	private void OnDisable() => inputActions.Disable();
+	private void OnDisable() => inputActions.InGameActions.Disable();
 
 	public void SaveSoundsSet()
     {
@@ -167,6 +167,6 @@ public class GameSettingsManager : MonoBehaviour
 
 	public void RebindCubeThrowing()
 	{
-		inputActions.DiceControl.ThrowDice.ChangeBinding(0);
+		
 	}
 }
