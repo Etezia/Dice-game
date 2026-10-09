@@ -87,6 +87,8 @@ public class PigGameManager : MonoBehaviour
 		currPlayerNum %= playerCount;
 		currGamePlace = gamePlaces[currPlayerNum];
 
+		scoreManager.ResetRoundScore();
+
 		isReadyToThrowing = false;
 		StartCoroutine(RotateCamera());
 	}
@@ -109,6 +111,8 @@ public class PigGameManager : MonoBehaviour
 		}
 		while (!isReadyToThrowing);
 
+		scoreManager.ResetRoundScore();
+		scoreManager.GetScoresByRotation(currGamePlace.DiceRbs);
 		yield return new WaitForEndOfFrame();
 	}
 

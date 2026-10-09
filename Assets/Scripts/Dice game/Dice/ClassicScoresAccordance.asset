@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94cc996ae48b50b4d9fd1b34c4347054, type: 3}
   m_Name: ClassicScoresAccordance
   m_EditorClassIdentifier: Assembly-CSharp::AxisToScoreAccordance
-  plusZ: 5
-  minusZ: 2
-  plusX: 3
-  minusX: 4
-  plusY: 1
-  minusY: 6
+  Forward: 5
+  Back: 2
+  Right: 3
+  Left: 4
+  Up: 1
+  Down: 6
