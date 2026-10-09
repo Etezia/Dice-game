@@ -26,12 +26,10 @@ public class GameSettingsManager : MonoBehaviour
 	[SerializeField] private string cubeThrowingBinding;
 	[SerializeField] private string cubeThrowingKey;
 
-	private InputSystem_Actions inputActions;
+	[SerializeField] private InputActionAsset inputActions;
 
 	private void Awake()
     {
-		inputActions = new InputSystem_Actions();
-
         if (!PlayerPrefs.HasKey(soundsKey))
         {
 			PlayerPrefs.SetFloat(soundsKey, 0.5f);
@@ -84,10 +82,6 @@ public class GameSettingsManager : MonoBehaviour
 		//Debug.Log("Fullscreen:" + PlayerPrefs.GetString(fullscreenKey));
 		//Debug.Log(QualitySettings.GetQualityLevel());
 	}
-
-	private void OnEnable() => inputActions.InGameActions.Enable();
-
-	private void OnDisable() => inputActions.InGameActions.Disable();
 
 	public void SaveSoundsSet()
     {
@@ -164,9 +158,4 @@ public class GameSettingsManager : MonoBehaviour
 
 		Screen.SetResolution(1366, 768, IsFullscreen);
     }
-
-	public void RebindCubeThrowing()
-	{
-		
-	}
 }

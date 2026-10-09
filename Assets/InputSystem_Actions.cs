@@ -128,15 +128,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Switch Pause"",
-                    ""type"": ""Button"",
-                    ""id"": ""94d3f0cf-df41-4aff-ac98-8a3075fe3b04"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -150,10 +141,27 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Throw Dice"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
+                }
+            ]
+        },
+        {
+            ""name"": ""GameUI"",
+            ""id"": ""43d48f93-e91d-4941-9ed8-88f366070be1"",
+            ""actions"": [
+                {
+                    ""name"": ""Switch Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""99c44ada-d890-4b58-a694-50393cbbeaff"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""8d62a666-d318-48d2-a30c-9dfc8a8b19a0"",
+                    ""id"": ""0c699b14-7b65-4aa7-bd68-494587cfac08"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -234,13 +242,16 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         // InGameActions
         m_InGameActions = asset.FindActionMap("InGameActions", throwIfNotFound: true);
         m_InGameActions_ThrowDice = m_InGameActions.FindAction("Throw Dice", throwIfNotFound: true);
-        m_InGameActions_SwitchPause = m_InGameActions.FindAction("Switch Pause", throwIfNotFound: true);
+        // GameUI
+        m_GameUI = asset.FindActionMap("GameUI", throwIfNotFound: true);
+        m_GameUI_SwitchPause = m_GameUI.FindAction("Switch Pause", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
     {
         UnityEngine.Debug.Assert(!m_MainMenu.enabled, "This will cause a leak and performance issues, InputSystem_Actions.MainMenu.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_InGameActions.enabled, "This will cause a leak and performance issues, InputSystem_Actions.InGameActions.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_GameUI.enabled, "This will cause a leak and performance issues, InputSystem_Actions.GameUI.Disable() has not been called.");
     }
 
     /// <summary>
@@ -413,7 +424,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_InGameActions;
     private List<IInGameActionsActions> m_InGameActionsActionsCallbackInterfaces = new List<IInGameActionsActions>();
     private readonly InputAction m_InGameActions_ThrowDice;
-    private readonly InputAction m_InGameActions_SwitchPause;
     /// <summary>
     /// Provides access to input actions defined in input action map "InGameActions".
     /// </summary>
@@ -429,10 +439,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "InGameActions/ThrowDice".
         /// </summary>
         public InputAction @ThrowDice => m_Wrapper.m_InGameActions_ThrowDice;
-        /// <summary>
-        /// Provides access to the underlying input action "InGameActions/SwitchPause".
-        /// </summary>
-        public InputAction @SwitchPause => m_Wrapper.m_InGameActions_SwitchPause;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -462,9 +468,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @ThrowDice.started += instance.OnThrowDice;
             @ThrowDice.performed += instance.OnThrowDice;
             @ThrowDice.canceled += instance.OnThrowDice;
-            @SwitchPause.started += instance.OnSwitchPause;
-            @SwitchPause.performed += instance.OnSwitchPause;
-            @SwitchPause.canceled += instance.OnSwitchPause;
         }
 
         /// <summary>
@@ -479,9 +482,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @ThrowDice.started -= instance.OnThrowDice;
             @ThrowDice.performed -= instance.OnThrowDice;
             @ThrowDice.canceled -= instance.OnThrowDice;
-            @SwitchPause.started -= instance.OnSwitchPause;
-            @SwitchPause.performed -= instance.OnSwitchPause;
-            @SwitchPause.canceled -= instance.OnSwitchPause;
         }
 
         /// <summary>
@@ -515,6 +515,102 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="InGameActionsActions" /> instance referencing this action map.
     /// </summary>
     public InGameActionsActions @InGameActions => new InGameActionsActions(this);
+
+    // GameUI
+    private readonly InputActionMap m_GameUI;
+    private List<IGameUIActions> m_GameUIActionsCallbackInterfaces = new List<IGameUIActions>();
+    private readonly InputAction m_GameUI_SwitchPause;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "GameUI".
+    /// </summary>
+    public struct GameUIActions
+    {
+        private @InputSystem_Actions m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public GameUIActions(@InputSystem_Actions wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "GameUI/SwitchPause".
+        /// </summary>
+        public InputAction @SwitchPause => m_Wrapper.m_GameUI_SwitchPause;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_GameUI; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="GameUIActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(GameUIActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="GameUIActions" />
+        public void AddCallbacks(IGameUIActions instance)
+        {
+            if (instance == null || m_Wrapper.m_GameUIActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_GameUIActionsCallbackInterfaces.Add(instance);
+            @SwitchPause.started += instance.OnSwitchPause;
+            @SwitchPause.performed += instance.OnSwitchPause;
+            @SwitchPause.canceled += instance.OnSwitchPause;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="GameUIActions" />
+        private void UnregisterCallbacks(IGameUIActions instance)
+        {
+            @SwitchPause.started -= instance.OnSwitchPause;
+            @SwitchPause.performed -= instance.OnSwitchPause;
+            @SwitchPause.canceled -= instance.OnSwitchPause;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="GameUIActions.UnregisterCallbacks(IGameUIActions)" />.
+        /// </summary>
+        /// <seealso cref="GameUIActions.UnregisterCallbacks(IGameUIActions)" />
+        public void RemoveCallbacks(IGameUIActions instance)
+        {
+            if (m_Wrapper.m_GameUIActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="GameUIActions.AddCallbacks(IGameUIActions)" />
+        /// <seealso cref="GameUIActions.RemoveCallbacks(IGameUIActions)" />
+        /// <seealso cref="GameUIActions.UnregisterCallbacks(IGameUIActions)" />
+        public void SetCallbacks(IGameUIActions instance)
+        {
+            foreach (var item in m_Wrapper.m_GameUIActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_GameUIActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="GameUIActions" /> instance referencing this action map.
+    /// </summary>
+    public GameUIActions @GameUI => new GameUIActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -609,6 +705,14 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnThrowDice(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "GameUI" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="GameUIActions.AddCallbacks(IGameUIActions)" />
+    /// <seealso cref="GameUIActions.RemoveCallbacks(IGameUIActions)" />
+    public interface IGameUIActions
+    {
         /// <summary>
         /// Method invoked when associated input action "Switch Pause" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

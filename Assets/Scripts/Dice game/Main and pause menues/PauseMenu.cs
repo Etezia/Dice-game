@@ -26,12 +26,11 @@ public class PauseMenu : MonoBehaviour
 
     void Update()
     {
-        var isPauseButtonPressed = inputSystem.InGameActions.SwitchPause.IsPressed();
+        var isPauseButtonPressed = inputSystem.GameUI.SwitchPause.WasPerformedThisFrame();
 		if (isPauseButtonPressed && isOnPause == false)
             Pause();
         else if(isPauseButtonPressed && isOnPause == true)
             NormalTimestep();
-        
     }
 
     private void OnEnable() => inputSystem.InGameActions.Enable();
