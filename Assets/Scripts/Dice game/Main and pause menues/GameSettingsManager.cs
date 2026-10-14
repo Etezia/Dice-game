@@ -26,8 +26,6 @@ public class GameSettingsManager : MonoBehaviour
 	[SerializeField] private string cubeThrowingBinding;
 	[SerializeField] private string cubeThrowingKey;
 
-	[SerializeField] private InputActionAsset inputActions;
-
 	private void Awake()
     {
         if (!PlayerPrefs.HasKey(soundsKey))

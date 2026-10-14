@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(AudioSource), typeof(Rigidbody), typeof(Collider))]
-public class SoundKnocker : MonoBehaviour
+public class DiceKnockHandler : MonoBehaviour
 {
     private AudioSource audioSource;
     [SerializeField] private AudioClip knockSound;
 
-	private float maxVolume = 0.7f;
-	[SerializeField] private float volumeCoeff = 0.012f;
+	private const float MaxVolume = 0.7f;
+	private const float VolumeCoeff = 0.012f;
 
 	private void Awake()
 	{
@@ -15,13 +15,12 @@ public class SoundKnocker : MonoBehaviour
 		audioSource.clip = knockSound;
 		audioSource.playOnAwake = false;
 		audioSource.loop = false;
-		audioSource.volume = 0.4f;
 		audioSource.spatialBlend = 1.0f;
 	}
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		audioSource.volume = collision.impulse.magnitude * volumeCoeff * maxVolume;
+		audioSource.volume = collision.impulse.magnitude * VolumeCoeff * MaxVolume;
 		audioSource.Play();
 	}
 }

@@ -3,20 +3,28 @@
 [RequireComponent(typeof(AudioSource))]
 public class MusicPlayer : MonoBehaviour
 {
+	private static MusicPlayer instance;
+
     [SerializeField] private AudioSource musicSource;
 	[SerializeField] private AudioClip[] musicClips;
-	[SerializeField] private float defaultMusicVolume = 0.5f;
+	[SerializeField,
+	Range(0f, 1f)] private float defaultMusicVolume = 0.5f;
 	[SerializeField] private string musicVolumeKey;
 
 	private int currClipId = 0;
 
 	private void Awake()
 	{
+		if (instance == null)
+			instance = this;
+		else
+			Destroy(this.gameObject);
+
 		if (PlayerPrefs.HasKey(musicVolumeKey))
 			SetMusicPlayerParams();
 		else
 			musicSource.volume = defaultMusicVolume;
-
+		
 		musicSource.loop = false;
 		if (musicClips != null && musicClips.Length > 0)
 			PlayNextTrack();

@@ -5,15 +5,13 @@ using static VectorExtensions;
 
 public class GamePlace : MonoBehaviour
 {
-	[SerializeField] private int id;
 	[SerializeField] private GameObject diceSkin;
-	[SerializeField] private float cameraRotationAngle;
 	[SerializeField] private Transform spawner;
-	private List<Rigidbody> diceRbs = new List<Rigidbody>();
+	[field: SerializeField] public float CameraRotationAngle { get; private set; }
 
-	public int Id => id;
-	public float CameraRotationAngle => cameraRotationAngle;
-	public List<Rigidbody> DiceRbs => diceRbs;
+	public List<Rigidbody> DiceRbs { get; } = new List<Rigidbody>();
+
+	public int OverallScore { get; set; }
 
 	public void SpawnDice(int diceCount)
 	{
@@ -21,15 +19,15 @@ public class GamePlace : MonoBehaviour
 		{
 			var currDice = Instantiate(
 				diceSkin, new Vector3(spawner.position.x + i * 3, spawner.position.y, spawner.position.z + i * 3), Quaternion.identity);
-			diceRbs.Add(currDice.GetComponent<Rigidbody>());
+			DiceRbs.Add(currDice.GetComponent<Rigidbody>());
 		}
 	}
 
-	public void ThrowDices()
+	public void ThrowDice()
 	{
 		foreach (var die in DiceRbs)
 		{
-			die.AddForce(GenerateVectorWithRandomMagnitude(30, 45), ForceMode.VelocityChange);
+			die.AddForce(GenerateVectorWithRandomMagnitude(25, 40), ForceMode.VelocityChange);
 			die.AddTorque(GenerateVectorWithRandomMagnitude(75, 110), ForceMode.VelocityChange);
 		}
 	}

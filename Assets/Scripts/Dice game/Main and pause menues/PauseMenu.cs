@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
@@ -16,26 +17,28 @@ public class PauseMenu : MonoBehaviour
 
     [SerializeField] private GameObject pauseButton;
 
-    private InputSystem_Actions inputSystem;
+    [SerializeField] private InputActionAsset inputSystem;
+
+    private InputAction pauseButtonPerforming;
 
     private void Awake()
     {
-        inputSystem = new InputSystem_Actions();
+        pauseButtonPerforming = inputSystem.FindAction("Switch Pause");
         Time.timeScale = 1.0f;
     }
 
     void Update()
     {
-        var isPauseButtonPressed = inputSystem.GameUI.SwitchPause.WasPerformedThisFrame();
+        var isPauseButtonPressed = pauseButtonPerforming.WasPerformedThisFrame();
 		if (isPauseButtonPressed && isOnPause == false)
             Pause();
         else if(isPauseButtonPressed && isOnPause == true)
             NormalTimestep();
     }
 
-    private void OnEnable() => inputSystem.InGameActions.Enable();
+    private void OnEnable() => pauseButtonPerforming.Enable();
 
-	private void OnDisable() => inputSystem.InGameActions.Disable();
+	private void OnDisable() => pauseButtonPerforming.Disable();
 
 	public void NormalTimestep()
     {

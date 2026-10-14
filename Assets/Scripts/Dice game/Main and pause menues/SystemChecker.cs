@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,8 +43,6 @@ public class SystemChecker : MonoBehaviour
 		RTSSupport.text = Convert.ToString(SystemInfo.supportsRayTracing);
 	}
 
-    void Update()
-    {
+    void Update() =>
         BatteryLevel.text = Convert.ToString(SystemInfo.batteryLevel * -100) + "%";
-    }
 }

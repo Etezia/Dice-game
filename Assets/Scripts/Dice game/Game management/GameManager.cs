@@ -1,33 +1,49 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static VectorExtensions;
 
-public class PigGameManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    [SerializeField] private PigScoreManager scoreManager;
 	[SerializeField] private BindingManager bindingManager;
 
 	[SerializeField] private Transform cameraRotator;
-    [SerializeField, Range(2, 4)] private int playerCount = 2;
+    [SerializeField, Range(2, 4)] private int playersCount = 2;
 	[SerializeField, Range(1, 5)] private int diceCount = 2;
 	[SerializeField] private GamePlace[] gamePlaces = new GamePlace[4];
+	[SerializeField] private GameMode gameMode = GameMode.Pig;
 
 	[SerializeField] private string throwBindingKey = "throwBinding";
+	[SerializeField] private string playersCountKey = "playersCount";
+	[SerializeField] private string diceCountKey = "diceCount";
 	[SerializeField] private InputActionAsset inputSystem;
 	private InputAction throwAction;
+
+	public List<Rigidbody> CurrDiceRbs => currGamePlace.DiceRbs;
+	public int CurrPlayerScore => currGamePlace.OverallScore;
 
 	private GamePlace currGamePlace;
 	private int currPlayerNum;
 	private bool isReadyToThrowing = true;
 
-	private int currDiceScore;
-	private int totalScore;
+	public event Action OnDiceStop;
+	public event Action OnRoundEnd;
+	public event Action OnRoundStart;
 
 	private void Awake()
 	{
-		for (var i = 0; i < playerCount; i++)
+		if (gameMode == GameMode.Yahtzee)
+			diceCount = 5;
+		else
+			if (PlayerPrefs.HasKey(diceCountKey))
+			diceCount = PlayerPrefs.GetInt(diceCountKey);
+
+		if (PlayerPrefs.HasKey(playersCountKey))
+			playersCount = PlayerPrefs.GetInt(playersCountKey);
+
+		for (var i = 0; i < playersCount; i++)
 		{
 			gamePlaces[i].gameObject.SetActive(true);
 			gamePlaces[i].SpawnDice(diceCount);
@@ -73,33 +89,31 @@ public class PigGameManager : MonoBehaviour
 		if (!isReadyToThrowing)
 			return;
 
-		currGamePlace.ThrowDices();
+		currGamePlace.ThrowDice();
 		isReadyToThrowing = false;
-		StartCoroutine(WaitForStopAndCount());
+		StartCoroutine(WaitForStop());
 	}
 
-	public void SelectNextPlayer()
+	public void EndRound()
 	{
+		OnRoundEnd?.Invoke();
 		if (!isReadyToThrowing)
 			return;
 
 		currPlayerNum++;
-		currPlayerNum %= playerCount;
+		currPlayerNum %= playersCount;
 		currGamePlace = gamePlaces[currPlayerNum];
 
-		scoreManager.ResetRoundScore();
-
 		isReadyToThrowing = false;
-		StartCoroutine(RotateCamera());
+		StartCoroutine(SelectNextPlayer());
 	}
 
-	private void CountScore()
+	public void FinishGame()
 	{
-		currDiceScore = 0;
-		
+		isReadyToThrowing = false;
 	}
 
-	private IEnumerator WaitForStopAndCount()
+	private IEnumerator WaitForStop()
 	{
 		do
 		{
@@ -111,13 +125,14 @@ public class PigGameManager : MonoBehaviour
 		}
 		while (!isReadyToThrowing);
 
-		scoreManager.ResetRoundScore();
-		scoreManager.GetScoresByRotation(currGamePlace.DiceRbs);
+		OnDiceStop?.Invoke();
 		yield return new WaitForEndOfFrame();
 	}
 
-	private IEnumerator RotateCamera()
+	private IEnumerator SelectNextPlayer()
 	{
+		yield return new WaitForSeconds(0.3f);
+
 		var currAngle = cameraRotator.rotation.eulerAngles.y;
 		var targetAngle = currGamePlace.CameraRotationAngle;
 
@@ -128,6 +143,15 @@ public class PigGameManager : MonoBehaviour
 			cameraRotator.rotation = Quaternion.Euler(0f, currAngle, 0f);
 		}
 
+		OnRoundStart?.Invoke();
 		isReadyToThrowing = true;
 	}
+
+	public void AddPointsToPlayer(int score) => currGamePlace.OverallScore += score;
+}
+
+public enum GameMode
+{
+	Pig, 
+	Yahtzee
 }
