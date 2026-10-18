@@ -9,17 +9,15 @@ using static PlayerPrefsKeyManager;
 public class ScoreManager : MonoBehaviour
 {
 	[SerializeField] private GameMode scoresCountMode;
-
     [SerializeField] private GameManager gameManager;
 
     [SerializeField] private AxisToScoreAccordance scoresAccordance;
-    [SerializeField] private int winScore = 100;
+    [field: SerializeField] public int WinScore { get; private set; } = 100;
 
-	[SerializeField] private TMP_Text winScoreText;
-	[SerializeField] private TMP_Text currPlayerScoreText;
+	public int CurrPlayerScore { get; private set; }
+	public int CurrRoundScore { get; private set; }
 
-	private int currPlayerScore;
-	private int currRoundScore;
+	public event Action OnScoreChange;
 
 	private void Awake()
 	{
@@ -27,9 +25,7 @@ public class ScoreManager : MonoBehaviour
 			scoresCountMode = (GameMode)PlayerPrefs.GetInt(GameModeKey);
 
 		if (PlayerPrefs.HasKey(MaxScoreKey))
-			winScore = PlayerPrefs.GetInt(MaxScoreKey);
-
-		winScoreText.text = winScore.ToString();
+			WinScore = PlayerPrefs.GetInt(MaxScoreKey);
 	}
 
 	private void OnEnable()
@@ -48,25 +44,20 @@ public class ScoreManager : MonoBehaviour
 
 	private void RefreshPlayerData()
 	{
-		currPlayerScore = gameManager.CurrPlayerScore;
-		RefreshScore();
+		CurrPlayerScore = gameManager.CurrPlayerScore;
+		OnScoreChange?.Invoke();
 	}
 
-	public void ScoreCurrPoints() => gameManager.AddPointsToPlayer(currRoundScore);
+	public void ScoreCurrPoints() => gameManager.AddPointsToPlayer(CurrRoundScore);
 
 	private void ResetRoundScore()
     {
-		currRoundScore = 0;
-	}
-
-	private void RefreshScore()
-	{
-		currPlayerScoreText.text = (currPlayerScore + currRoundScore).ToString();
+		CurrRoundScore = 0;
 	}
 
 	private void CheckIsMaxScoreGained()
 	{
-		if (currPlayerScore + currRoundScore >= winScore)
+		if (CurrPlayerScore + CurrRoundScore >= WinScore)
 		{
 			gameManager.FinishGame();
 			enabled = false;
@@ -100,9 +91,11 @@ public class ScoreManager : MonoBehaviour
 		}
 
 		if (scoresCountMode == GameMode.Pig)
-			currRoundScore = GetPigGameScore(diceScores);
+			CurrRoundScore = GetPigGameScore(diceScores);
 		else
-			currRoundScore = GetYahtzeeGameScore(diceScores);
-		RefreshScore();
-    }
+			CurrRoundScore = GetYahtzeeGameScore(diceScores);
+
+		OnScoreChange?.Invoke();
+		CheckIsMaxScoreGained();
+	}
 }

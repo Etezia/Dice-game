@@ -7,41 +7,42 @@ using static PlayerPrefsKeyManager;
 
 public class BindingManager : MonoBehaviour
 {
-    [SerializeField] private TMP_Text bindingText;
-    [SerializeField] private Button rebindButton;
-
     [SerializeField] private InputActionAsset inputSystem;
     private InputActionRebindingExtensions.RebindingOperation rebindingOperation;
-	private InputAction throwAction;
+	public InputAction ThrowAction { get; private set; }
 
-	private void Awake()
+	public event Action OnRebinding;
+	public event Action OnEndRebinding;
+
+	private void OnEnable()
 	{
-		throwAction = inputSystem.FindAction("Throw Dice");
+		ThrowAction = inputSystem.FindAction("Throw Dice");
 	}
 
 	public void Rebind()
     {
-		OnRebinding.Invoke();
-		throwAction.Disable();
-		bindingText.text = "Press any button to rebind";
-		rebindButton.interactable = false;
-		rebindingOperation = throwAction.PerformInteractiveRebinding().OnComplete(operation => EndRebind());
+		OnRebinding?.Invoke();
+		ThrowAction.Disable();
+		rebindingOperation = ThrowAction.PerformInteractiveRebinding()
+			.WithCancelingThrough("<Keyboard>/escape")
+			.OnComplete(operation => EndRebind())
+			.OnCancel(operation => CancelRebinding());
 		rebindingOperation.Start();
     }
 
 	private void EndRebind()
 	{
 		rebindingOperation.Dispose();
-		throwAction.Enable();
-		SetBindingLabelText($"Press {throwAction.bindings[0].effectivePath.Split('/')[1].ToUpper()} to throw");
-		rebindButton.interactable = true;
-		OnEndRebinding.Invoke();
+		ThrowAction.Enable();
+		OnEndRebinding?.Invoke();
 
 		PlayerPrefs.SetString(ThrowBindingKey, inputSystem.SaveBindingOverridesAsJson());
 	}
 
-	public void SetBindingLabelText(string text) => bindingText.text = text;
-
-	public event Action OnRebinding;
-	public event Action OnEndRebinding;
+	private void CancelRebinding()
+	{
+		rebindingOperation.Dispose();
+		ThrowAction.Enable();
+		OnEndRebinding?.Invoke();
+	}
 }

@@ -56,12 +56,6 @@ public class GameManager : MonoBehaviour
 
 		throwAction = inputSystem.FindAction("Throw Dice");
 
-		var throwRebinding = PlayerPrefs.GetString(ThrowBindingKey);
-		if (!string.IsNullOrEmpty(throwRebinding)) 
-			inputSystem.LoadBindingOverridesFromJson(throwRebinding);
-		
-		bindingManager.SetBindingLabelText(
-				$"Press {throwAction.bindings[0].effectivePath.Split('/')[1].ToUpper()} to throw");
 		playerName.text = currGamePlace.PlayerName;
 
 		Subscribe();
