@@ -27,7 +27,7 @@ public static class ScoreCombinationsCounter
             return scoresSum * 2 + 50;
         if (uniqueScoresCount == count && maxScore - minScore + 1 == count)
             return scoresSum * 3;
-        if (uniqueScoresCount == count - 2)
+        if (uniqueScoresCount <= count - 2)
             return scoresSum * 2;
 
         return scoresSum;

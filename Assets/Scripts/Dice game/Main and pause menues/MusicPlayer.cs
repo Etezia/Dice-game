@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using static PlayerPrefsKeyManager;
 
 [RequireComponent(typeof(AudioSource))]
 public class MusicPlayer : MonoBehaviour
@@ -9,7 +10,6 @@ public class MusicPlayer : MonoBehaviour
 	[SerializeField] private AudioClip[] musicClips;
 	[SerializeField,
 	Range(0f, 1f)] private float defaultMusicVolume = 0.5f;
-	[SerializeField] private string musicVolumeKey;
 
 	private int currClipId = 0;
 
@@ -20,7 +20,7 @@ public class MusicPlayer : MonoBehaviour
 		else
 			Destroy(this.gameObject);
 
-		if (PlayerPrefs.HasKey(musicVolumeKey))
+		if (PlayerPrefs.HasKey(MusicVolumeKey))
 			SetMusicPlayerParams();
 		else
 			musicSource.volume = defaultMusicVolume;
@@ -40,7 +40,7 @@ public class MusicPlayer : MonoBehaviour
 
 	public void SetMusicPlayerParams()
 	{
-		musicSource.volume = PlayerPrefs.GetFloat(musicVolumeKey);
+		musicSource.volume = PlayerPrefs.GetFloat(MusicVolumeKey);
 	}
 
 	public void PlayNextTrack()

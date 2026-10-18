@@ -2,73 +2,64 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using TMPro.EditorUtilities;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static PlayerPrefsKeyManager;
 
 public class GameSettingsManager : MonoBehaviour
 {
 
-    [SerializeField] private Slider SoundVolume;
-    [SerializeField] private string soundsKey;
+    [SerializeField] private Slider soundVolumeSlider;
 
-	[SerializeField] private TMP_Dropdown ScreenResolution;
-	[SerializeField] private TMP_Dropdown GraphicsQuality;
+	[SerializeField] private TMP_Dropdown screenResolution;
+	[SerializeField] private TMP_Dropdown graphicsQuality;
 
-    [SerializeField] private string resolutionKey;
-	[SerializeField] private string graphicsKey;
-
-	[SerializeField] private bool IsFullscreen = true;
-	[SerializeField] private Toggle FullscreenModeActivator;
-	[SerializeField] private string fullscreenKey;
-
-	[SerializeField] private string cubeThrowingBinding;
-	[SerializeField] private string cubeThrowingKey;
+	[SerializeField] private bool isFullscreen = true;
+	[SerializeField] private Toggle fullscreenModeActivator;
 
 	private void Awake()
     {
-        if (!PlayerPrefs.HasKey(soundsKey))
+        if (!PlayerPrefs.HasKey(MusicVolumeKey))
         {
-			PlayerPrefs.SetFloat(soundsKey, 0.5f);
-            SoundVolume.value = 0.5f;
+			PlayerPrefs.SetFloat(MusicVolumeKey, 0.5f);
+            soundVolumeSlider.value = 0.5f;
 		}
         else
         {
-            SoundVolume.value = PlayerPrefs.GetFloat(soundsKey);
+            soundVolumeSlider.value = PlayerPrefs.GetFloat(MusicVolumeKey);
         }
 
-		if (!PlayerPrefs.HasKey(resolutionKey))
+		if (!PlayerPrefs.HasKey(ResolutionKey))
 		{
-			PlayerPrefs.SetInt(resolutionKey, 2);
-			ScreenResolution.value = 2;
+			PlayerPrefs.SetInt(ResolutionKey, 2);
+			screenResolution.value = 2;
 			//SaveScreenResolutionSet();
 		}
 		else
 		{
-			ScreenResolution.value = PlayerPrefs.GetInt(resolutionKey);
+			screenResolution.value = PlayerPrefs.GetInt(ResolutionKey);
 		}
 
-		if (!PlayerPrefs.HasKey(graphicsKey))
+		if (!PlayerPrefs.HasKey(GraphicsKey))
 		{
-			PlayerPrefs.SetInt(graphicsKey, 1);
-			GraphicsQuality.value = 1;
+			PlayerPrefs.SetInt(GraphicsKey, 1);
+			graphicsQuality.value = 1;
 			//SaveGraphicsQuakitySet();
 		}
 		else
 		{
-			GraphicsQuality.value = PlayerPrefs.GetInt(graphicsKey);
+			graphicsQuality.value = PlayerPrefs.GetInt(GraphicsKey);
 		}
 
-		if (!PlayerPrefs.HasKey(fullscreenKey))
+		if (!PlayerPrefs.HasKey(FullscreenKey))
 		{
-			PlayerPrefs.SetString(fullscreenKey, "true");
-			FullscreenModeActivator.isOn = true;
-			IsFullscreen = true;
+			PlayerPrefs.SetString(FullscreenKey, "true");
+			fullscreenModeActivator.isOn = true;
+			isFullscreen = true;
 		}
 		else
 		{
-			FullscreenModeActivator.isOn = bool.Parse(PlayerPrefs.GetString(fullscreenKey)); 
+			fullscreenModeActivator.isOn = bool.Parse(PlayerPrefs.GetString(FullscreenKey)); 
 		}
 	}
 
@@ -83,52 +74,49 @@ public class GameSettingsManager : MonoBehaviour
 
 	public void SaveSoundsSet()
     {
-        PlayerPrefs.SetFloat(soundsKey, SoundVolume.value);
+        PlayerPrefs.SetFloat(MusicVolumeKey, soundVolumeSlider.value);
     }
 
 	public void SaveScreenResolutionSet()
 	{
-		switch (ScreenResolution.value)
+		switch (screenResolution.value)
 		{
 			case 0:
-				Screen.SetResolution(1024, 768, IsFullscreen);
-				PlayerPrefs.SetInt(resolutionKey, ScreenResolution.value);
+				Screen.SetResolution(1024, 768, isFullscreen);
 				break;
 			case 1:
-				Screen.SetResolution(1280, 720, IsFullscreen);
-				PlayerPrefs.SetInt(resolutionKey, ScreenResolution.value);
+				Screen.SetResolution(1280, 720, isFullscreen);
 				break;
 			case 2:
-				Screen.SetResolution(1366, 768, IsFullscreen);
-				PlayerPrefs.SetInt(resolutionKey, ScreenResolution.value);
+				Screen.SetResolution(1366, 768, isFullscreen);
 				break;
 			case 3:
-				Screen.SetResolution(2560, 1440, IsFullscreen);
-				PlayerPrefs.SetInt(resolutionKey, ScreenResolution.value);
+				Screen.SetResolution(2560, 1440, isFullscreen);
 				break;
 			case 4:
-				Screen.SetResolution(3840, 2160, IsFullscreen);
-				PlayerPrefs.SetInt(resolutionKey, ScreenResolution.value);
+				Screen.SetResolution(3840, 2160, isFullscreen);
 				break;
 		}
+
+		PlayerPrefs.SetInt(ResolutionKey, screenResolution.value);
 		Debug.Log("Saved");
 	}
 
 	public void SaveGraphicsQualitySet()
 	{
-		switch (GraphicsQuality.value)
+		switch (graphicsQuality.value)
 		{
 			case 0:
 				QualitySettings.SetQualityLevel(0);
-				PlayerPrefs.SetInt(graphicsKey, GraphicsQuality.value);
+				PlayerPrefs.SetInt(GraphicsKey, graphicsQuality.value);
 				break;
 			case 1:
 				QualitySettings.SetQualityLevel(1);
-				PlayerPrefs.SetInt(graphicsKey, GraphicsQuality.value);
+				PlayerPrefs.SetInt(GraphicsKey, graphicsQuality.value);
 				break;
 			case 2:
 				QualitySettings.SetQualityLevel(2);
-				PlayerPrefs.SetInt(graphicsKey, GraphicsQuality.value);
+				PlayerPrefs.SetInt(GraphicsKey, graphicsQuality.value);
 				break;
 		}
 		Debug.Log("Saved");
@@ -136,24 +124,24 @@ public class GameSettingsManager : MonoBehaviour
 
 	public void FullscreenSet()
 	{
-		PlayerPrefs.SetString(fullscreenKey, Convert.ToString(FullscreenModeActivator.isOn));
-		IsFullscreen = FullscreenModeActivator.isOn;
+		PlayerPrefs.SetString(FullscreenKey, Convert.ToString(fullscreenModeActivator.isOn));
+		isFullscreen = fullscreenModeActivator.isOn;
 		SaveScreenResolutionSet();
 	}
 
 	public void ResetAllSettings()
     {
         //PlayerPrefs.DeleteAll();
-        PlayerPrefs.SetFloat(soundsKey, 0.5f);
-		PlayerPrefs.SetInt(resolutionKey, 2);
-		PlayerPrefs.SetInt(graphicsKey, 1);
-		PlayerPrefs.SetString(fullscreenKey, "true");
+        PlayerPrefs.SetFloat(MusicVolumeKey, 0.5f);
+		PlayerPrefs.SetInt(ResolutionKey, 2);
+		PlayerPrefs.SetInt(GraphicsKey, 1);
+		PlayerPrefs.SetString(FullscreenKey, "true");
 
-		SoundVolume.value = 0.5f;
-		ScreenResolution.value = 2;
-		GraphicsQuality.value = 1;
-		FullscreenModeActivator.isOn = true;
+		soundVolumeSlider.value = 0.5f;
+		screenResolution.value = 2;
+		graphicsQuality.value = 1;
+		fullscreenModeActivator.isOn = true;
 
-		Screen.SetResolution(1366, 768, IsFullscreen);
+		Screen.SetResolution(1366, 768, isFullscreen);
     }
 }

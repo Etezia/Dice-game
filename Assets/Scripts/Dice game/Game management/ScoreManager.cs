@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using static ScoreCombinationsCounter;
+using static VectorExtensions;
+using static PlayerPrefsKeyManager;
 
-public class PigScoreManager : MonoBehaviour
+public class ScoreManager : MonoBehaviour
 {
 	[SerializeField] private GameMode scoresCountMode;
 
     [SerializeField] private GameManager gameManager;
 
     [SerializeField] private AxisToScoreAccordance scoresAccordance;
-    [SerializeField] private int winScore;
-
-	[SerializeField] private string winScoreKey = "winScore";
+    [SerializeField] private int winScore = 100;
 
 	[SerializeField] private TMP_Text winScoreText;
 	[SerializeField] private TMP_Text currPlayerScoreText;
@@ -23,8 +23,13 @@ public class PigScoreManager : MonoBehaviour
 
 	private void Awake()
 	{
-		if (PlayerPrefs.HasKey(winScoreKey))
-			winScore = PlayerPrefs.GetInt(winScoreKey);
+		if (PlayerPrefs.HasKey(GameModeKey))
+			scoresCountMode = (GameMode)PlayerPrefs.GetInt(GameModeKey);
+
+		if (PlayerPrefs.HasKey(MaxScoreKey))
+			winScore = PlayerPrefs.GetInt(MaxScoreKey);
+
+		winScoreText.text = winScore.ToString();
 	}
 
 	private void OnEnable()
@@ -47,19 +52,28 @@ public class PigScoreManager : MonoBehaviour
 		RefreshScore();
 	}
 
-	public void ScoreCurrPoints()
-	{
-		gameManager.AddPointsToPlayer(currRoundScore);
-		RefreshPlayerData();
-	}
+	public void ScoreCurrPoints() => gameManager.AddPointsToPlayer(currRoundScore);
 
 	private void ResetRoundScore()
     {
 		currRoundScore = 0;
-        RefreshScore();
 	}
 
-    private void CountDiceScores()
+	private void RefreshScore()
+	{
+		currPlayerScoreText.text = (currPlayerScore + currRoundScore).ToString();
+	}
+
+	private void CheckIsMaxScoreGained()
+	{
+		if (currPlayerScore + currRoundScore >= winScore)
+		{
+			gameManager.FinishGame();
+			enabled = false;
+		}
+	}
+
+	private void CountDiceScores()
     {
 		ResetRoundScore();
 
@@ -91,8 +105,4 @@ public class PigScoreManager : MonoBehaviour
 			currRoundScore = GetYahtzeeGameScore(diceScores);
 		RefreshScore();
     }
-
-    private float DotWithUpVector(Vector3 vector) => Vector3.Dot(Vector3.up, vector);
-
-    private void RefreshScore() => currPlayerScoreText.text = (currPlayerScore + currRoundScore).ToString();
 }

@@ -3,12 +3,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static PlayerPrefsKeyManager;
 
 public class BindingManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text bindingText;
     [SerializeField] private Button rebindButton;
-    [SerializeField] private string throwBindingKey = "throwBinding";
 
     [SerializeField] private InputActionAsset inputSystem;
     private InputActionRebindingExtensions.RebindingOperation rebindingOperation;
@@ -37,7 +37,7 @@ public class BindingManager : MonoBehaviour
 		rebindButton.interactable = true;
 		OnEndRebinding.Invoke();
 
-		PlayerPrefs.SetString(throwBindingKey, inputSystem.SaveBindingOverridesAsJson());
+		PlayerPrefs.SetString(ThrowBindingKey, inputSystem.SaveBindingOverridesAsJson());
 	}
 
 	public void SetBindingLabelText(string text) => bindingText.text = text;

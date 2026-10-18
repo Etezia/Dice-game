@@ -3,12 +3,13 @@ using UnityEngine;
 using System.Collections.Generic;
 using static VectorExtensions;
 
-public class GamePlace : MonoBehaviour
+public class PlayerPlace : MonoBehaviour
 {
 	[SerializeField] private GameObject diceSkin;
 	[SerializeField] private Transform spawner;
-	[field: SerializeField] public float CameraRotationAngle { get; private set; }
 
+	[field: SerializeField] public string PlayerName { get; private set; }
+	[field: SerializeField] public float CameraRotationAngle { get; private set; }
 	public List<Rigidbody> DiceRbs { get; } = new List<Rigidbody>();
 
 	public int OverallScore { get; set; }

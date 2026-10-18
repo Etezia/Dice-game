@@ -9,4 +9,6 @@ public static class VectorExtensions
 
 		return randomAngle * randomVector;
 	}
+
+	public static float DotWithUpVector(Vector3 vector) => Vector3.Dot(Vector3.up, vector);
 }
