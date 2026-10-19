@@ -302,6 +302,8 @@ GameObject:
   - component: {fileID: 1743316479}
   - component: {fileID: 1743316478}
   - component: {fileID: 1743316477}
+  - component: {fileID: 1743316481}
+  - component: {fileID: 1743316480}
   m_Layer: 0
   m_Name: Music player
   m_TagString: Untagged
@@ -324,14 +326,15 @@ MonoBehaviour:
   musicSource: {fileID: 1743316478}
   musicClips:
   - {fileID: 8300000, guid: b3aeb4e72bc4a6648890e076034c87d8, type: 3}
-  - {fileID: 8300000, guid: 0888a306210753241bb6536e09312cce, type: 3}
-  - {fileID: 8300000, guid: 009ebc9112600e742b96752f754c3469, type: 3}
   - {fileID: 8300000, guid: 0ba9c1a9499c336438e996755d0b3823, type: 3}
+  - {fileID: 8300000, guid: fa9eac2b9e107e14cb4b55bb9399bc55, type: 3}
+  - {fileID: 8300000, guid: 0888a306210753241bb6536e09312cce, type: 3}
   - {fileID: 8300000, guid: 7da76a46e09d0a14f9eba28ddd1218d4, type: 3}
   - {fileID: 8300000, guid: 12845dd084800644d92f428caf01495a, type: 3}
   - {fileID: 8300000, guid: daae3c054c936ae418f51f5f871a69b1, type: 3}
   - {fileID: 8300000, guid: 009ebc9112600e742b96752f754c3469, type: 3}
   defaultMusicVolume: 0.5
+  badAppleTrackName: Bad Apple!!
 --- !u!82 &1743316478
 AudioSource:
   m_ObjectHideFlags: 0
@@ -444,6 +447,59 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!328 &1743316480
+VideoPlayer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1743316476}
+  m_Enabled: 1
+  m_VideoClip: {fileID: 32900000, guid: a4fe7474414a4324fbfb3346a79636fd, type: 3}
+  m_TargetCameraAlpha: 1
+  m_TargetCamera3DLayout: 0
+  m_TargetCamera: {fileID: 0}
+  m_TargetTexture: {fileID: 0}
+  m_TimeReference: 0
+  m_TargetMaterialRenderer: {fileID: 0}
+  m_TargetMaterialProperty: <noninit>
+  m_RenderMode: 2
+  m_AspectRatio: 2
+  m_DataSource: 0
+  m_TimeUpdateMode: 2
+  m_PlaybackSpeed: 1
+  m_AudioOutputMode: 1
+  m_TargetAudioSources:
+  - {fileID: 1743316478}
+  m_DirectAudioVolumes:
+  - 1
+  m_Url: 
+  m_EnabledAudioTracks: 00
+  m_DirectAudioMutes: 00
+  m_ControlledAudioTrackCount: 1
+  m_PlayOnAwake: 0
+  m_SkipOnDrop: 0
+  m_Looping: 0
+  m_WaitForFirstFrame: 1
+  m_FrameReadyEventEnabled: 0
+  m_VideoShaders: []
+--- !u!114 &1743316481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1743316476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 962bef1329dd19d469826aade6399414, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BadApplePlayer
+  gameSceneName: Dice game scene
+  badAppleMaterial: {fileID: 2100000, guid: a809b1bb0abb03244baa8ec3a6b7d346, type: 2}
+  badAppleTexture: {fileID: 8400000, guid: a00f344b610420848a1daf1c3885ea7b, type: 2}
+  videoPlayer: {fileID: 1743316480}
+  musicPlayer: {fileID: 1743316477}
 --- !u!1 &1787825395
 GameObject:
   m_ObjectHideFlags: 0

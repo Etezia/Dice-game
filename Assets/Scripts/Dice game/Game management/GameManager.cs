@@ -65,6 +65,8 @@ public class GameManager : MonoBehaviour
 
 	private void OnEnable()
 	{
+
+
 		bindingManager.OnRebinding += Unsubscribe;
 		bindingManager.OnEndRebinding += Subscribe;
 	}
