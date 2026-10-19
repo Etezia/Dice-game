@@ -11,9 +11,6 @@ public class GameManager : MonoBehaviour
 {
 	[SerializeField] private BindingManager bindingManager;
 
-	[SerializeField] private TMP_Text playerName;
-	[SerializeField] private TMP_Text winnerLabel;
-
 	[SerializeField] private Transform cameraRotator;
     [SerializeField, Range(2, 4)] private int playersCount = 2;
 	[SerializeField, Range(1, 5)] private int diceCount = 2;
@@ -23,16 +20,19 @@ public class GameManager : MonoBehaviour
 	[SerializeField] private InputActionAsset inputSystem;
 	private InputAction throwAction;
 
-	public List<Rigidbody> CurrDiceRbs => currGamePlace.DiceRbs;
-	public int CurrPlayerScore => currGamePlace.OverallScore;
-
 	private PlayerPlace currGamePlace;
 	private int currPlayerNum;
-	[SerializeField] private bool isReadyToThrowing = true;
+	private bool isReadyToThrowing = true;
+
+	public List<Rigidbody> CurrDiceRbs => currGamePlace.DiceRbs;
+	public int CurrPlayerScore => currGamePlace.OverallScore;
+	public string CurrPlayernNme => currGamePlace.PlayerName;
 
 	public event Action OnDiceStop;
 	public event Action OnRoundEnd;
 	public event Action OnRoundStart;
+	public event Action OnGameStart;
+	public event Action OnGameEnd;
 
 	private void Awake()
 	{
@@ -55,11 +55,6 @@ public class GameManager : MonoBehaviour
 		currPlayerNum = 0;
 
 		throwAction = inputSystem.FindAction("Throw Dice");
-
-		playerName.text = currGamePlace.PlayerName;
-
-		bindingManager.OnRebinding += Unsubscribe;
-		bindingManager.OnEndRebinding += Subscribe;
 	}
 
 	private void OnEnable()
@@ -68,6 +63,8 @@ public class GameManager : MonoBehaviour
 
 		bindingManager.OnRebinding += Unsubscribe;
 		bindingManager.OnEndRebinding += Subscribe;
+
+		OnGameStart?.Invoke();
 	}
 
 	private void OnDisable()
@@ -111,9 +108,7 @@ public class GameManager : MonoBehaviour
 	public void FinishGame()
 	{
 		isReadyToThrowing = false;
-		winnerLabel.gameObject.SetActive(true);
-		winnerLabel.text = $"CONGRATULATIONS! {currGamePlace.PlayerName} IS WINNER!";
-		print("game over");
+		OnGameEnd?.Invoke();
 	}
 
 	private IEnumerator WaitForStop()
@@ -145,8 +140,6 @@ public class GameManager : MonoBehaviour
 			currAngle = Mathf.Lerp(currAngle, targetAngle, 0.1f);
 			cameraRotator.rotation = Quaternion.Euler(0f, currAngle, 0f);
 		}
-
-		playerName.text = currGamePlace.PlayerName;
 
 		OnRoundStart?.Invoke();
 		isReadyToThrowing = true;

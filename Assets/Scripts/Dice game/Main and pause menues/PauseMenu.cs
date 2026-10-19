@@ -1,11 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.Timeline;
-using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -13,13 +11,11 @@ public class PauseMenu : MonoBehaviour
 
     [SerializeField] private string sceneForLoadingPause;
 
-    [SerializeField] private GameObject pauseMenu;
-
-    [SerializeField] private GameObject pauseButton;
-
     [SerializeField] private InputActionAsset inputSystem;
-
     private InputAction pauseButtonPerforming;
+
+    public event Action OnPause;
+    public event Action OnResume;
 
     private void Awake()
     {
@@ -27,33 +23,39 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1.0f;
     }
 
-    void Update()
+    private void OnEnable()
     {
-        var isPauseButtonPressed = pauseButtonPerforming.WasPerformedThisFrame();
-		if (isPauseButtonPressed && isOnPause == false)
+		pauseButtonPerforming.performed += ChangeGameState;
+		pauseButtonPerforming.Enable();
+	}
+
+	private void OnDisable()
+    {
+        pauseButtonPerforming.performed -= ChangeGameState;
+		pauseButtonPerforming.Disable();
+	}
+
+    private void ChangeGameState(InputAction.CallbackContext context)
+    {
+        print("callback");
+        if (isOnPause)
+            Resume();
+        else
             Pause();
-        else if(isPauseButtonPressed && isOnPause == true)
-            NormalTimestep();
     }
 
-    private void OnEnable() => pauseButtonPerforming.Enable();
-
-	private void OnDisable() => pauseButtonPerforming.Disable();
-
-	public void NormalTimestep()
+	public void Resume()
     {
 		Time.timeScale = 1f;
 		isOnPause = false;
-        pauseMenu.SetActive(false);
-        pauseButton.SetActive(true);
+        OnResume?.Invoke();
 	}
 
 	public void Pause()
 	{
 		Time.timeScale = 0f;
 		isOnPause = true;
-		pauseMenu.SetActive(true);
-        pauseButton.SetActive(false);
+		OnPause?.Invoke();
 	}
 
 	public void GoToMainMenu() => SceneManager.LoadScene(sceneForLoadingPause);

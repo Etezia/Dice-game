@@ -2644,8 +2644,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenu
   isOnPause: 0
   sceneForLoadingPause: Main menu
-  pauseMenu: {fileID: 1619775117}
-  pauseButton: {fileID: 1776897562}
   inputSystem: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!1 &726850740
 GameObject:
@@ -2657,6 +2655,7 @@ GameObject:
   m_Component:
   - component: {fileID: 726850741}
   - component: {fileID: 726850742}
+  - component: {fileID: 726850743}
   m_Layer: 0
   m_Name: UI manager
   m_TagString: Untagged
@@ -2693,11 +2692,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameUI
   bindingManager: {fileID: 1979103869}
   scoreManager: {fileID: 1195091339}
+  gameManager: {fileID: 1979103868}
   rebindButton: {fileID: 1546633567}
   bindingText: {fileID: 1853289395}
   inputSystem: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   winScoreText: {fileID: 591915738}
   currPlayerScoreText: {fileID: 395522725}
+  playerName: {fileID: 111093729}
+  winnerLabel: {fileID: 1589706061}
+--- !u!114 &726850743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 726850740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80913ab582e8d0645b3ea0606b0e2bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PauseMenuUI
+  pauseMenuObjs: {fileID: 1619775117}
+  gameUI: {fileID: 1776897562}
+  pauseButton: {fileID: 1755044926}
+  closePauseMenuButton: {fileID: 1644216371}
+  pauseMenuManager: {fileID: 721172464}
 --- !u!1 &778043331
 GameObject:
   m_ObjectHideFlags: 0
@@ -5632,31 +5651,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1755044927}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 721172464}
-        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
-        m_MethodName: Pause
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1776897562}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1755044927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6447,8 +6442,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PigGameManager
   bindingManager: {fileID: 1979103869}
-  playerName: {fileID: 111093729}
-  winnerLabel: {fileID: 1589706061}
   cameraRotator: {fileID: 1929988683}
   playersCount: 4
   diceCount: 5
@@ -6459,7 +6452,6 @@ MonoBehaviour:
   - {fileID: 1674525683}
   gameMode: 1
   inputSystem: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  isReadyToThrowing: 1
 --- !u!114 &1979103869
 MonoBehaviour:
   m_ObjectHideFlags: 0

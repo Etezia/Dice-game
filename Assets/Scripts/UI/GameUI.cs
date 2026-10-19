@@ -9,6 +9,7 @@ public class GameUI : MonoBehaviour
 {
 	[SerializeField] private BindingManager bindingManager;
 	[SerializeField] private ScoreManager scoreManager;
+	[SerializeField] private GameManager gameManager;
 
 	[SerializeField] private Button rebindButton;
 	[SerializeField] private TMP_Text bindingText;
@@ -18,13 +19,15 @@ public class GameUI : MonoBehaviour
 	[SerializeField] private TMP_Text winScoreText;
 	[SerializeField] private TMP_Text currPlayerScoreText;
 
+	[SerializeField] private TMP_Text playerName;
+	[SerializeField] private TMP_Text winnerLabel;
+
 	private void Awake()
 	{
 		rebindButton.onClick.AddListener(bindingManager.Rebind);
 
-		bindingManager.OnRebinding += OnRebinding;
-		bindingManager.OnEndRebinding += OnEndrebinding;
-
+		if (PlayerPrefs.HasKey(ThrowBindingKey))
+			inputSystem.LoadBindingOverridesFromJson(PlayerPrefs.GetString(ThrowBindingKey));
 		var throwAction = inputSystem.FindAction("Throw Dice");
 
 		bindingText.text =
@@ -34,8 +37,30 @@ public class GameUI : MonoBehaviour
 			winScoreText.text = PlayerPrefs.GetInt(MaxScoreKey).ToString();
 		else
 			winScoreText.text = scoreManager.WinScore.ToString();
+	}
+
+	private void OnEnable()
+	{
+		bindingManager.OnRebinding += OnRebinding;
+		bindingManager.OnEndRebinding += OnEndrebinding;
 
 		scoreManager.OnScoreChange += RefreshScore;
+
+		gameManager.OnGameStart += ChangeCurrPlayer;
+		gameManager.OnRoundStart += ChangeCurrPlayer;
+		gameManager.OnGameEnd += AnnounceWinners;
+	}
+
+	private void OnDisable()
+	{
+		bindingManager.OnRebinding -= OnRebinding;
+		bindingManager.OnEndRebinding -= OnEndrebinding;
+
+		scoreManager.OnScoreChange -= RefreshScore;
+
+		gameManager.OnGameStart -= ChangeCurrPlayer;
+		gameManager.OnRoundStart -= ChangeCurrPlayer;
+		gameManager.OnGameEnd -= AnnounceWinners;
 	}
 
 	private void OnRebinding()
@@ -53,4 +78,12 @@ public class GameUI : MonoBehaviour
 
 	private void RefreshScore() => 
 		currPlayerScoreText.text = (scoreManager.CurrPlayerScore + scoreManager.CurrRoundScore).ToString();
+
+	private void ChangeCurrPlayer() => playerName.text = gameManager.CurrPlayernNme;
+
+	private void AnnounceWinners()
+	{
+		winnerLabel.gameObject.SetActive(true);
+		winnerLabel.text = $"CONGRATULATIONS! {gameManager.CurrPlayernNme} IS WINNER!";
+	}
 }

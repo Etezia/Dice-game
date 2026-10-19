@@ -14,10 +14,7 @@ public class BindingManager : MonoBehaviour
 	public event Action OnRebinding;
 	public event Action OnEndRebinding;
 
-	private void OnEnable()
-	{
-		ThrowAction = inputSystem.FindAction("Throw Dice");
-	}
+	private void Awake() => ThrowAction = inputSystem.FindAction("Throw Dice");
 
 	public void Rebind()
     {
