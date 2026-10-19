@@ -7,8 +7,6 @@ using static PlayerPrefsKeyManager;
 [RequireComponent(typeof(VideoPlayer), typeof(AudioSource))]
 public class BadApplePlayer : MonoBehaviour
 {
-	public BadApplePlayer BadApplePlayerInstance { get; private set; }
-
 	[SerializeField] private string gameSceneName = "Dice game scene";
 
 	[SerializeField] private Material badAppleMaterial;

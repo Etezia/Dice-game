@@ -58,14 +58,13 @@ public class GameManager : MonoBehaviour
 
 		playerName.text = currGamePlace.PlayerName;
 
-		Subscribe();
 		bindingManager.OnRebinding += Unsubscribe;
 		bindingManager.OnEndRebinding += Subscribe;
 	}
 
 	private void OnEnable()
 	{
-
+		Subscribe();
 
 		bindingManager.OnRebinding += Unsubscribe;
 		bindingManager.OnEndRebinding += Subscribe;
@@ -73,6 +72,8 @@ public class GameManager : MonoBehaviour
 
 	private void OnDisable()
 	{
+		Unsubscribe();
+
 		bindingManager.OnRebinding -= Unsubscribe;
 		bindingManager.OnEndRebinding -= Subscribe;
 	}
@@ -152,11 +153,4 @@ public class GameManager : MonoBehaviour
 	}
 
 	public void AddPointsToPlayer(int score) => currGamePlace.OverallScore += score;
-}
-
-public enum GameMode
-{
-	Pig, 
-	Yahtzee,
-	Experimental
 }

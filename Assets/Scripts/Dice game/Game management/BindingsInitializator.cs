@@ -8,6 +8,7 @@ public class BindingsInitializator : MonoBehaviour
 
 	private void OnEnable()
 	{
-		
+		if (PlayerPrefs.HasKey(ThrowBindingKey))
+			inputSystem.LoadBindingOverridesFromJson(PlayerPrefs.GetString(ThrowBindingKey));
 	}
 }

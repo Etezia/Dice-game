@@ -5,7 +5,7 @@ using static PlayerPrefsKeyManager;
 [RequireComponent(typeof(AudioSource))]
 public class MusicPlayer : MonoBehaviour
 {
-	public static MusicPlayer MusicPlayerInstance { get; private set; }
+	public static MusicPlayer Instance { get; private set; }
 
     [SerializeField] private AudioSource musicSource;
 	[SerializeField] private AudioClip[] musicClips;
@@ -23,8 +23,8 @@ public class MusicPlayer : MonoBehaviour
 
 	private void Awake()
 	{
-		if (MusicPlayerInstance == null)
-			MusicPlayerInstance = this;
+		if (Instance == null)
+			Instance = this;
 		else
 			Destroy(this.gameObject);
 
@@ -38,7 +38,6 @@ public class MusicPlayer : MonoBehaviour
 
 	private void Start()
 	{
-
 		if (musicClips != null && musicClips.Length > 0)
 			PlayNextTrack();
 	}

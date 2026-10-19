@@ -16,9 +16,6 @@ public class BindingManager : MonoBehaviour
 
 	private void OnEnable()
 	{
-		if (PlayerPrefs.HasKey(ThrowBindingKey))
-			inputSystem.LoadBindingOverridesFromJson(PlayerPrefs.GetString(ThrowBindingKey));
-
 		ThrowAction = inputSystem.FindAction("Throw Dice");
 	}
 

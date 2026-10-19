@@ -11,6 +11,7 @@ public class MainMenuUI : MonoBehaviour
 	[SerializeField] private Button startYahtzeeGameButton;
 	//[SerializeField] private Button startExperimentalGameButton;
 	[SerializeField] private Button exitGameButton;
+	[SerializeField] private Button nextTrackButton;
 
 	[SerializeField] private Slider musicVolumeSlider;
 
@@ -20,5 +21,16 @@ public class MainMenuUI : MonoBehaviour
 		startYahtzeeGameButton.onClick.AddListener(gameMenuManager.StartYahtzeeGame);
 		//startExperimentalGameButton.onClick.AddListener(gameMenuManager.StartExperimentalGame);
 		exitGameButton.onClick.AddListener(gameMenuManager.Exit);
+	}
+
+	private void OnEnable()
+	{
+		musicPlayer = MusicPlayer.Instance;
+		nextTrackButton.onClick.AddListener(musicPlayer.PlayNextTrack);
+	}
+
+	private void OnDisable()
+	{
+		nextTrackButton.onClick.RemoveListener(musicPlayer.PlayNextTrack);
 	}
 }
