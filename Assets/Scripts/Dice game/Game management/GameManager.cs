@@ -3,9 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static VectorExtensions;
 using static PlayerPrefsKeyManager;
-using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,6 +12,7 @@ public class GameManager : MonoBehaviour
 	[SerializeField] private Transform cameraRotator;
     [SerializeField, Range(2, 4)] private int playersCount = 2;
 	[SerializeField, Range(1, 5)] private int diceCount = 2;
+	[SerializeField] private int diceRollsPerRound = 5;
 	[SerializeField] private PlayerPlace[] gamePlaces = new PlayerPlace[4];
 	[SerializeField] private GameMode gameMode = GameMode.Pig;
 
@@ -28,6 +27,9 @@ public class GameManager : MonoBehaviour
 	public int CurrPlayerScore => currGamePlace.OverallScore;
 	public string CurrPlayernNme => currGamePlace.PlayerName;
 
+	public int DiceRollsLeft { get; private set; }
+
+	public event Action OnDiceRoll;
 	public event Action OnDiceStop;
 	public event Action OnRoundEnd;
 	public event Action OnRoundStart;
@@ -53,6 +55,7 @@ public class GameManager : MonoBehaviour
 
 		currGamePlace = gamePlaces[0];
 		currPlayerNum = 0;
+		DiceRollsLeft = diceRollsPerRound;
 
 		throwAction = inputSystem.FindAction("Throw Dice");
 	}
@@ -83,9 +86,11 @@ public class GameManager : MonoBehaviour
 
 	private void ThrowDice(InputAction.CallbackContext callback)
 	{
-		if (!isReadyToThrowing)
+		if (!isReadyToThrowing || DiceRollsLeft <= 0)
 			return;
 
+		DiceRollsLeft--;
+		OnDiceRoll?.Invoke();
 		currGamePlace.ThrowDice();
 		isReadyToThrowing = false;
 		StartCoroutine(WaitForStop());
@@ -141,6 +146,7 @@ public class GameManager : MonoBehaviour
 			cameraRotator.rotation = Quaternion.Euler(0f, currAngle, 0f);
 		}
 
+		DiceRollsLeft = diceRollsPerRound;
 		OnRoundStart?.Invoke();
 		isReadyToThrowing = true;
 	}

@@ -14,10 +14,15 @@ public class GameUI : MonoBehaviour
 	[SerializeField] private Button rebindButton;
 	[SerializeField] private TMP_Text bindingText;
 
+	[SerializeField] private Button throwButton;
+	[SerializeField] private Button nextPlayerButton;
+	[SerializeField] private Button scorePointsButton;
+
 	[SerializeField] private InputActionAsset inputSystem;
 
 	[SerializeField] private TMP_Text winScoreText;
 	[SerializeField] private TMP_Text currPlayerScoreText;
+	[SerializeField] private TMP_Text diceRollsLeft;
 
 	[SerializeField] private TMP_Text playerName;
 	[SerializeField] private TMP_Text winnerLabel;
@@ -25,6 +30,10 @@ public class GameUI : MonoBehaviour
 	private void Awake()
 	{
 		rebindButton.onClick.AddListener(bindingManager.Rebind);
+		throwButton.onClick.AddListener(gameManager.ThrowDice);
+		nextPlayerButton.onClick.AddListener(gameManager.EndRound);
+		scorePointsButton.onClick.AddListener(scoreManager.ScoreCurrPoints);
+		scorePointsButton.onClick.AddListener(gameManager.EndRound);
 
 		if (PlayerPrefs.HasKey(ThrowBindingKey))
 			inputSystem.LoadBindingOverridesFromJson(PlayerPrefs.GetString(ThrowBindingKey));
@@ -47,8 +56,11 @@ public class GameUI : MonoBehaviour
 		scoreManager.OnScoreChange += RefreshScore;
 
 		gameManager.OnGameStart += ChangeCurrPlayer;
+		gameManager.OnGameStart += RefreshDiceRolls;
 		gameManager.OnRoundStart += ChangeCurrPlayer;
+		gameManager.OnRoundStart += RefreshDiceRolls;
 		gameManager.OnGameEnd += AnnounceWinners;
+		gameManager.OnDiceRoll += RefreshDiceRolls;
 	}
 
 	private void OnDisable()
@@ -59,8 +71,11 @@ public class GameUI : MonoBehaviour
 		scoreManager.OnScoreChange -= RefreshScore;
 
 		gameManager.OnGameStart -= ChangeCurrPlayer;
+		gameManager.OnGameStart -= RefreshDiceRolls;
 		gameManager.OnRoundStart -= ChangeCurrPlayer;
+		gameManager.OnRoundStart -= RefreshDiceRolls;
 		gameManager.OnGameEnd -= AnnounceWinners;
+		gameManager.OnDiceRoll -= RefreshDiceRolls;
 	}
 
 	private void OnRebinding()
@@ -86,4 +101,6 @@ public class GameUI : MonoBehaviour
 		winnerLabel.gameObject.SetActive(true);
 		winnerLabel.text = $"CONGRATULATIONS! {gameManager.CurrPlayernNme} IS WINNER!";
 	}
+
+	private void RefreshDiceRolls() => diceRollsLeft.text = gameManager.DiceRollsLeft.ToString();
 }
