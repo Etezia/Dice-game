@@ -59,19 +59,13 @@ public class MusicPlayer : MonoBehaviour
 	{
 		var currTrack = musicSource.clip?.name;
 		if (currTrack != null && currTrack == badAppleTrackName)
-		{
-			print("stop mus playing");
 			OnBadAppleStopPlaying?.Invoke();
-		}
 
 		musicSource.clip = musicClips[currClipId];
 
 		currTrack = musicSource.clip.name;
 		if (currTrack == badAppleTrackName)
-		{
-			print("mus playing");
 			OnBadAppleStartPlaying?.Invoke();
-		}
 
 		musicSource.Play();
 		currClipId = (currClipId + 1) % musicClips.Length;

@@ -99,7 +99,7 @@ public class GameSettingsManager : MonoBehaviour
 		}
 
 		PlayerPrefs.SetInt(ResolutionKey, screenResolution.value);
-		Debug.Log("Saved");
+		//	Debug.Log("Saved");
 	}
 
 	public void SaveGraphicsQualitySet()
@@ -119,7 +119,7 @@ public class GameSettingsManager : MonoBehaviour
 				PlayerPrefs.SetInt(GraphicsKey, graphicsQuality.value);
 				break;
 		}
-		Debug.Log("Saved");
+		//Debug.Log("Saved");
 	}
 
 	public void FullscreenSet()

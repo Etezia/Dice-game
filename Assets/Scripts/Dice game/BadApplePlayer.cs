@@ -26,7 +26,7 @@ public class BadApplePlayer : MonoBehaviour
 		badAppleMaterial.mainTexture = null;
 
 		musicPlayer.OnBadAppleStartPlaying += PlayBadApple;
-		musicPlayer.OnBadAppleStopPlaying += StopPlaying;
+		musicPlayer.OnBadAppleStopPlaying += StopPlayingBadApple;
 		SceneManager.sceneLoaded += OnNewSceneLoad;
 	}
 
@@ -38,18 +38,22 @@ public class BadApplePlayer : MonoBehaviour
 
 	private void OnNewSceneLoad(Scene scene, LoadSceneMode mode)
 	{
-		if (scene.name != gameSceneName)
-			StopPlaying();
+		if (scene.name != gameSceneName && videoPlayer.isPlaying)
+			StopPlayer();
 		else if(badAppleShouldPlay)
 			PlayBadApple();
 	}
 
+	private void StopPlayer()
+	{
+		videoPlayer.Stop();
+		badAppleMaterial.mainTexture = null;
+	}
+
 	private void PlayBadApple()
 	{
-		print("play aim");
 		if (SceneManager.GetActiveScene().name == gameSceneName)
 		{
-			print("playing");
 			badAppleMaterial.mainTexture = badAppleTexture;
 			videoPlayer.time = musicPlayer.Time;
 			videoPlayer.Play();
@@ -58,14 +62,10 @@ public class BadApplePlayer : MonoBehaviour
 		badAppleShouldPlay = true;
 	}
 
-	private void StopPlaying()
+	private void StopPlayingBadApple()
 	{
-		if (videoPlayer.isPlaying)
-		{
-			print("stop");
-			videoPlayer.Stop();
-			badAppleMaterial.mainTexture = null;
-			badAppleShouldPlay = false;
-		}
+		videoPlayer.Stop();
+		badAppleMaterial.mainTexture = null;
+		badAppleShouldPlay = false;
 	}
 }
